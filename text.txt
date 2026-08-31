@@ -1,0 +1,9 @@
+İlk başlangıç tamam. Bundan sonrası pratik, öğrenme. vs.
+
+Sonraki adımlar:
+
+[ ] Todo projesindeki gereksiz dosyaları temizle ve sadeleştir.
+[ ] Kalan projeyi satır satır açıklat.
+[ ] Yeni düzenlemelerle daha uygun bir seviyeye getir.
+[ ] Github'a uygun bir şekilde yükle. 
+[ ] Üstatlar ile paylaş.

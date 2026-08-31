@@ -1,0 +1,118 @@
+@page "/pano"
+@rendermode InteractiveServer
+
+<PageTitle>Pano</PageTitle>
+
+<div class="board-page">
+
+<h1>Görev Panosu</h1>
+
+<div class="add-bar">
+
+    <input placeholder="Yeni görev..." @bind="_newTitle"/>
+
+    <select @bind="_newPriority">
+        <option value="Low">Düşük</option>
+        <option value="Normal">Normal</option>
+        <option value="High">Yüksek</option>
+    </select>
+
+    <input type="date" @bind="_newDueDate" />
+    <button class="btn btn-primary" @onclick="AddTask">  Ekle  </button>
+
+
+</div>
+
+<div class="board">
+
+    @foreach (var doubl in doubles)
+    {
+
+    <section class="col" @ondragover:preventDefault="true" @ondrop="() => Drop(doubl.Status)">
+        <h2> @doubl.StatusName</h2>
+
+        @foreach (var task in _tasks.Where(t => t.Status == doubl.Status))
+        {
+            <div class="card" draggable="true" @ondragstart="() => _dragged = task"> 
+                @task.Title 
+                <span class="pill @task.Level">@task.Level</span>
+                
+                @if (task.DueDate is not null)
+                {
+                    <span class="due">@task.DueDate.Value.ToString("dd.MM.yyyy")</span>
+                }
+                
+                <button class="del" @onclick="() => _tasks.Remove(task)"> x </button>
+            </div>
+
+            
+        } 
+    </section>
+
+    }
+</div>
+
+</div>
+
+
+@code {
+
+    #region Tanımalar
+    private List<KanbanTask> _tasks =
+        [
+        new KanbanTask { Title = "Görev 1" },
+        new KanbanTask { Title = "Görev 2", Status = Progress.InProgress},
+        new KanbanTask { Title = "Görev 3", Status = Progress.Completed}
+        ];
+
+    private (Progress Status, string StatusName) [] doubles = 
+    [
+    (Progress.NotStarted, "Yapılacak"),
+    (Progress.InProgress, "Yapılıyor"),
+    (Progress.Completed,  "Tamamlandı"),
+    ];
+
+
+    private string? _newTitle;
+
+    private Priority _newPriority = Priority.Normal;
+
+
+    private DateOnly? _newDueDate;
+    private KanbanTask? _dragged;  // Şu an sürüklenen kart.
+
+
+
+    #endregion
+
+    #region Metotlar
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(_newTitle))
+        {
+            _tasks.Add(new KanbanTask { Title = _newTitle, Level = _newPriority, DueDate = _newDueDate});
+            _newTitle = string.Empty;
+            _newDueDate = null;
+        }
+    }
+
+    private void Drop(Progress status)
+    {
+        if (_dragged is not null)
+        {
+            _dragged.Status = status;
+            _dragged = null;
+        }
+    }
+
+    
+
+
+    
+
+
+
+    #endregion
+
+}
+

@@ -1,0 +1,39 @@
+@page "/"
+@rendermode InteractiveServer
+
+@* Ana sayfa artık burası. @page "/" = kök URL *@
+
+<PageTitle>Todo</PageTitle>
+
+@* Başlıktaki parantez: henüz yapılmamış (IsDone = false) todo sayısı *@
+<h1>Todo (@todos.Count(todo => !todo.IsDone))</h1>
+
+<ul>
+    @foreach (var todo in todos)
+    {
+        <li>
+            <input type="checkbox" @bind="todo.IsDone" />
+            <input @bind="todo.Title" />
+        </li>
+    }
+</ul>
+
+@* Yazılan metni newTodo değişkenine bağlar *@
+<input placeholder="Something todo" @bind="newTodo" />
+
+@* Basınca AddTodo çalışır *@
+<button class="btn btn-primary" @onclick="AddTodo">Add todo</button>
+
+@code {
+    private List<TodoItem> todos = [];   // Todo'ları tutan liste
+    private string? newTodo;              // Input kutusundaki metin
+
+    private void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            todos.Add(new TodoItem { Title = newTodo });
+            newTodo = string.Empty;
+        }
+    }
+}
